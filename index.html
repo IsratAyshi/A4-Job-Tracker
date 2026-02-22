@@ -8,6 +8,7 @@
     <!-- daisy ui connect -->
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css" />
 
     <!-- font awsome cdn -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -52,7 +53,7 @@
 
     <hr class="my-7 opacity-30">
 
-    <main class="mx-auto w-[80%]">
+    <main id="mainContainer" class="mx-auto w-[80%]">
         <!-- available jobs count show -->
         <section class="flex justify-between">
             <div>
@@ -76,7 +77,22 @@
                 <button onclick="toggleStyle('rejected-filter-btn')" class="btn btn-ghost bg-white" id="rejected-filter-btn">Rejected</button>
             </div>
 
-            <!-- all job cards section -->
+            <!-- Filtered job cards section -->
+            <section id="filtered-section" class="bg-base-200 min-h-screen hidden">
+                <div class="bg-base-100 py-28 px-10 flex flex-col items-center gap-5 text-center rounded-lg">
+                    <div>
+                        <img src="./jobs.png" alt="" class="max-w-28">
+                    </div>
+
+                    <div>
+                        <h2 class="text-[#002C5C] text-2xl font-semibold">No jobs available</h2>
+                        <p class="text-[#64748b]">Check back soon for new job opportunities</p>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- All job cards section -->
             <section id="allCards" class="">
 
             <!-- card 1-->
