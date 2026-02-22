@@ -66,16 +66,17 @@ function toggleStyle(id) {
 
     // filtering for each filter button (All, Interview, Rejected)
     if (id == 'interview-filter-btn') {
+
         allCardSection.classList.add('hidden');
         filterSection.classList.remove('hidden')
-        // renderInterview()
+        renderInterview()
     } else if (id == 'all-filter-btn') {
         allCardSection.classList.remove('hidden');
         filterSection.classList.add('hidden')
     } else if (id == 'rejected-filter-btn') {
         allCardSection.classList.add('hidden');
         filterSection.classList.remove('hidden')
-        // renderStruggling()
+        renderRejected()
     }
     calculateCount(); //refresh the right side job count show 
 }
@@ -85,22 +86,24 @@ function toggleStyle(id) {
 // step 2 delegation
 mainContainer.addEventListener('click', function (event) {
 
+    const parenNode = event.target.parentNode.parentNode;
+    // console.log(parenNode);
+    
+    const companyName = parenNode.querySelector('.companyName').innerText;
+    const position = parenNode.querySelector('.position').innerText;
+    const location = parenNode.querySelector('.location').innerText;
+    const type = parenNode.querySelector('.type').innerText;
+    const salary = parenNode.querySelector('.salary').innerText;
+    // const status = parenNode.querySelector('.status-tag').innerText;
+    const description = parenNode.querySelector('.description').innerText;
+
+    // when job card interview btn clicked 
     if (event.target.classList.contains('interview-btn'))
     {
-        const parenNode = event.target.parentNode.parentNode;
-        // console.log(parenNode);
-        
-        const companyName = parenNode.querySelector('.companyName').innerText;
-        const position = parenNode.querySelector('.position').innerText;
-        const location = parenNode.querySelector('.location').innerText;
-        const type = parenNode.querySelector('.type').innerText;
-        const salary = parenNode.querySelector('.salary').innerText;
-        // const status = parenNode.querySelector('.status-tag').innerText;
-        const description = parenNode.querySelector('.description').innerText;
 
-        parenNode.querySelector('.status-tag').innerText = 'INTERVIEWED';
-        parenNode.querySelector('.status-tag').classList.remove('bg-[#eef4ffFF]');
-        parenNode.querySelector('.status-tag').classList.add('bg-[#10B981]');
+        parenNode.querySelector('.status-tag').innerText = 'APPLIED';
+        parenNode.querySelector('.status-tag').classList.remove('status-default', 'status-rejected', 'status-interview');
+        parenNode.querySelector('.status-tag').classList.add('status-interview');
         
 
         const cardInfo = {
@@ -109,27 +112,99 @@ mainContainer.addEventListener('click', function (event) {
             location,
             type,
             salary,
-            status: 'INTERVIEWED',
+            status: 'APPLIED',
             description
         }
 
         // varify if list already has that job card, if not then push
-        const jobExist = interviewList.find(item => item.campanyName == cardInfo.companyName);
+        const jobExist = interviewList.find(item => item.companyName == cardInfo.companyName);
 
         if (!jobExist){
             interviewList.push(cardInfo);
         }
         // console.log(interviewList)
 
-        renderInterview();
+        // filter out the job from rejectedList if in it
+        rejectedList = rejectedList.filter(item => item.companyName != cardInfo.companyName)
+
+        // after removing re-render the rejcted tab html
+        if (currentStatus == 'rejected-filter-btn') {
+            renderRejected();
+        }
+
+        calculateCount();
+        toggleStyle('interview-filter-btn');
+
+    }
+
+    // when job card rejected btn clicked
+    else if (event.target.classList.contains('rejected-btn'))
+    {
+        
+
+        parenNode.querySelector('.status-tag').innerText = 'REJECTED';
+        parenNode.querySelector('.status-tag').classList.remove('status-default', 'status-interview', 'status-rejected');
+
+        parenNode.querySelector('.status-tag').classList.add('status-rejected');
+        
+
+        const cardInfo = {
+            companyName,
+            position,
+            location,
+            type,
+            salary,
+            status: 'REJECTED',
+            description
+        }
+
+        // varify if list already has that job card, if not then push
+        const jobExist = rejectedList.find(item => item.companyName == cardInfo.companyName);
+
+        if (!jobExist){
+            rejectedList.push(cardInfo);
+        }
+        // console.log(rejectedList)
+
+
+        // filter out the job from interviewList
+        interviewList = interviewList.filter(item => item.companyName != cardInfo.companyName)
+
+        // after removing re-render the interview tab html
+        if (currentStatus == 'interview-filter-btn') {
+            renderInterview();
+        }
+        
+        calculateCount();
+        toggleStyle('rejected-filter-btn');
 
     }
 
 })
 
+// function for rendering interview tab
 function renderInterview(){
     filterSection.innerHTML = '';
 
+    if(interviewList.length === 0){
+        let div = document.createElement('div');
+        div.className = 'bg-base-100 py-28 px-10 flex flex-col items-center gap-5 text-center rounded-lg';
+
+        div.innerHTML = `
+        <div>
+            <img src="./jobs.png" alt="" class="max-w-28">
+        </div>
+
+        <div>
+            <h2 class="text-[#002C5C] text-2xl font-semibold">No jobs available</h2>
+            <p class="text-[#64748b]">Check back soon for new job opportunities</p>
+        </div>
+        `;
+        filterSection.appendChild(div);
+
+    }
+
+    else {
     for (const interview of interviewList){
         
         let div = document.createElement('div');
@@ -150,7 +225,7 @@ function renderInterview(){
                     <p class="salary">$130,000 - $175,000<p>
                 </div>
 
-                <p class="status-tag badge py-4 px-3 rounded-[4px] bg-[#10B981]">${interview.status}</p>
+                <p class="status-tag badge py-4 px-3 rounded-[4px] status-interview">${interview.status}</p>
                 <p class="description text-[14px] text-[#323b49FF]">${interview.description}</p>
 
                 <div class="flex gap-2">
@@ -168,6 +243,103 @@ function renderInterview(){
             </div>
         `
         filterSection.appendChild(div);
-        calculateCount();
+
+        // toggle match status on the All cards tab
+        const cards = Array.from(allCardSection.children);
+        const previousStatusCard = cards.find(item => item.querySelector('.companyName').innerText == interview.companyName);
+
+        // console.log(previousStatusCard);
+
+        const updatedStatusTag = previousStatusCard.querySelector('.status-tag');
+        updatedStatusTag.innerText = interview.status;
+        updatedStatusTag.className = 'status-tag badge py-4 px-3 rounded-[4px] status-interview';
+        // console.log(updatedStatusTag);
+    
     }
+    }
+    calculateCount();
 }
+
+
+// function for rendering rejected tab
+function renderRejected(){
+    filterSection.innerHTML = '';
+
+    if(rejectedList.length === 0){
+        let div = document.createElement('div');
+        div.className = 'bg-base-100 py-28 px-10 flex flex-col items-center gap-5 text-center rounded-lg';
+
+        div.innerHTML = `
+        <div>
+            <img src="./jobs.png" alt="" class="max-w-28">
+        </div>
+
+        <div>
+            <h2 class="text-[#002C5C] text-2xl font-semibold">No jobs available</h2>
+            <p class="text-[#64748b]">Check back soon for new job opportunities</p>
+        </div>
+        `;
+        filterSection.appendChild(div);
+
+    }
+
+    else {
+    for (const rejected of rejectedList){
+        
+        let div = document.createElement('div');
+        div.className = 'card p-6 shadow-sm flex flex-row justify-between bg-base-100 mb-4';
+
+        div.innerHTML = `
+            <!-- main part 1 -->
+            <div class="space-y-5">
+                <div>
+                    <h3 class="companyName font-semibold text-lg text-[#002C5C] ">${rejected.companyName}</h3>
+                    <p class="position text-[#64748bFF]">${rejected.position}</p>
+                </div>
+
+
+                <div class="flex text-[14px] gap-1 text-[#64748bFF]">
+                    <p class="location">${rejected.location}</p>•
+                    <p class="type">${rejected.type}</p>•
+                    <p class="salary">$130,000 - $175,000<p>
+                </div>
+
+                <p class="status-tag badge py-4 px-3 rounded-[4px] status-rejected">${rejected.status}</p>
+                <p class="description text-[14px] text-[#323b49FF]">${rejected.description}</p>
+
+                <div class="flex gap-2">
+                    <button class="interview-btn btn btn-outline btn-success">INTERVIEW</button>
+
+                    <button class="rejected-btn btn btn-outline btn-error">REJECTED</button>
+                </div>
+            </div>
+
+            <!-- main part 2 -->
+            <div>
+                <button class="btn btn-circle">
+                    <i class="fa-solid fa-trash-can" style="color: #64748b;"></i>
+                </button>
+            </div>
+        `
+        filterSection.appendChild(div);
+
+        // toggle match status on the All cards tab
+        const cards = Array.from(allCardSection.children);
+        const previousStatusCard = cards.find(item => item.querySelector('.companyName').innerText == rejected.companyName);
+
+        // console.log(previousStatusCard);
+
+        const updatedStatusTag = previousStatusCard.querySelector('.status-tag');
+        updatedStatusTag.innerText = rejected.status;
+        updatedStatusTag.className = 'status-tag badge py-4 px-3 rounded-[4px] status-rejected';
+        // console.log(updatedStatusTag);
+    }
+    }
+    calculateCount();
+}
+
+
+// if ()
+// if (interviewList.length === 0){
+//     filterSection.innerHTML = ``
+// }
