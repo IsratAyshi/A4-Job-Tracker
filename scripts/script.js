@@ -69,14 +69,14 @@ function toggleStyle(id) {
 
         allCardSection.classList.add('hidden');
         filterSection.classList.remove('hidden')
-        renderInterview()
+        renderInterview();
     } else if (id == 'all-filter-btn') {
         allCardSection.classList.remove('hidden');
         filterSection.classList.add('hidden')
     } else if (id == 'rejected-filter-btn') {
         allCardSection.classList.add('hidden');
         filterSection.classList.remove('hidden')
-        renderRejected()
+        renderRejected();
     }
     calculateCount(); //refresh the right side job count show 
 }
@@ -86,24 +86,23 @@ function toggleStyle(id) {
 // step 2 delegation
 mainContainer.addEventListener('click', function (event) {
 
-    const parenNode = event.target.parentNode.parentNode;
-    // console.log(parenNode);
-    
-    const companyName = parenNode.querySelector('.companyName').innerText;
-    const position = parenNode.querySelector('.position').innerText;
-    const location = parenNode.querySelector('.location').innerText;
-    const type = parenNode.querySelector('.type').innerText;
-    const salary = parenNode.querySelector('.salary').innerText;
-    // const status = parenNode.querySelector('.status-tag').innerText;
-    const description = parenNode.querySelector('.description').innerText;
-
     // when job card interview btn clicked 
     if (event.target.classList.contains('interview-btn'))
     {
+        const parentNode = event.target.parentNode.parentNode;
+        // console.log(parenNode);
+        
+        const companyName = parentNode.querySelector('.companyName').innerText;
+        const position = parentNode.querySelector('.position').innerText;
+        const location = parentNode.querySelector('.location').innerText;
+        const type = parentNode.querySelector('.type').innerText;
+        const salary = parentNode.querySelector('.salary').innerText;
+        // const status = parenNode.querySelector('.status-tag').innerText;
+        const description = parentNode.querySelector('.description').innerText;
 
-        parenNode.querySelector('.status-tag').innerText = 'APPLIED';
-        parenNode.querySelector('.status-tag').classList.remove('status-default', 'status-rejected', 'status-interview');
-        parenNode.querySelector('.status-tag').classList.add('status-interview');
+        parentNode.querySelector('.status-tag').innerText = 'APPLIED';
+        parentNode.querySelector('.status-tag').classList.remove('status-default', 'status-rejected', 'status-interview');
+        parentNode.querySelector('.status-tag').classList.add('status-interview');
         
 
         const cardInfo = {
@@ -140,12 +139,21 @@ mainContainer.addEventListener('click', function (event) {
     // when job card rejected btn clicked
     else if (event.target.classList.contains('rejected-btn'))
     {
+        const parentNode = event.target.parentNode.parentNode;
+        // console.log(parenNode);
         
+        const companyName = parentNode.querySelector('.companyName').innerText;
+        const position = parentNode.querySelector('.position').innerText;
+        const location = parentNode.querySelector('.location').innerText;
+        const type = parentNode.querySelector('.type').innerText;
+        const salary = parentNode.querySelector('.salary').innerText;
+        // const status = parenNode.querySelector('.status-tag').innerText;
+        const description = parentNode.querySelector('.description').innerText;
 
-        parenNode.querySelector('.status-tag').innerText = 'REJECTED';
-        parenNode.querySelector('.status-tag').classList.remove('status-default', 'status-interview', 'status-rejected');
+        parentNode.querySelector('.status-tag').innerText = 'REJECTED';
+        parentNode.querySelector('.status-tag').classList.remove('status-default', 'status-interview', 'status-rejected');
 
-        parenNode.querySelector('.status-tag').classList.add('status-rejected');
+        parentNode.querySelector('.status-tag').classList.add('status-rejected');
         
 
         const cardInfo = {
@@ -177,6 +185,25 @@ mainContainer.addEventListener('click', function (event) {
         
         calculateCount();
         toggleStyle('rejected-filter-btn');
+
+    }
+
+    // when delete btn clicked
+    else if(event.target.closest('.delete-button'))
+    {   
+        console.log('delete button clicked');
+
+
+
+        deleteBtn = event.target.closest('.delete-button');
+        deleteBtnParentCard = deleteBtn.parentNode.parentNode;
+
+        
+        const dltCardCompanyName = deleteBtnParentCard.querySelector('.companyName').innerText;
+
+        console.log(dltCardCompanyName);
+
+        
 
     }
 
@@ -237,7 +264,7 @@ function renderInterview(){
 
             <!-- main part 2 -->
             <div>
-                <button class="btn btn-circle">
+                <button class="delete-button btn btn-circle">
                     <i class="fa-solid fa-trash-can" style="color: #64748b;"></i>
                 </button>
             </div>
@@ -316,7 +343,7 @@ function renderRejected(){
 
             <!-- main part 2 -->
             <div>
-                <button class="btn btn-circle">
+                <button class="delete-button btn btn-circle">
                     <i class="fa-solid fa-trash-can" style="color: #64748b;"></i>
                 </button>
             </div>
@@ -339,7 +366,3 @@ function renderRejected(){
 }
 
 
-// if ()
-// if (interviewList.length === 0){
-//     filterSection.innerHTML = ``
-// }
