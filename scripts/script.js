@@ -2,6 +2,7 @@
 
 let interviewList = [];
 let rejectedList = [];
+let allList = [];
 let currentStatus = 'all-filter-btn';
 
 //job counts
@@ -191,9 +192,7 @@ mainContainer.addEventListener('click', function (event) {
     // when delete btn clicked
     else if(event.target.closest('.delete-button'))
     {   
-        console.log('delete button clicked');
-
-
+        // console.log('delete button clicked');
 
         deleteBtn = event.target.closest('.delete-button');
         deleteBtnParentCard = deleteBtn.parentNode.parentNode;
@@ -201,9 +200,30 @@ mainContainer.addEventListener('click', function (event) {
         
         const dltCardCompanyName = deleteBtnParentCard.querySelector('.companyName').innerText;
 
-        console.log(dltCardCompanyName);
+        // console.log(dltCardCompanyName);
 
-        
+        // filter out the job from interviewList
+        interviewList = interviewList.filter(item => item.companyName != dltCardCompanyName)
+        // after removing re-render the interview tab html
+        if (currentStatus == 'interview-filter-btn') {
+            renderInterview();
+        }
+
+        // filter out the job from rejectedList
+        rejectedList = rejectedList.filter(item => item.companyName != dltCardCompanyName)
+        // after removing re-render the rejected tab html
+        if (currentStatus == 'rejected-filter-btn') {
+            renderRejected();
+        }
+
+        // remove the job card from ui 
+        const cards = Array.from(document.querySelectorAll('.card'))
+        for (const card of cards){
+            if(card.querySelector('.companyName').innerText === dltCardCompanyName)
+                card.remove();
+                // console.log(card);
+        }
+        calculateCount();
 
     }
 
@@ -364,5 +384,6 @@ function renderRejected(){
     }
     calculateCount();
 }
+
 
 
