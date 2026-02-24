@@ -1,12 +1,8 @@
 
-## Dashboard
-- Website name and Create a dashboard like figma 
-
 ## Answers to Questions
 
 ### 1. What is the difference between getElementById, getElementsByClassName, and querySelector / querySelectorAll?
-- Website name and Create a dashboard like figma 
-
+- While getElementById selects/gets one single element by it's unique HTML id  , getElementsByClass gets elements by class and returns live array like HTMLCollection . On the other hand, querySelector and querySelectorAll allows selection with flexible combination of CSS selector (basic selectors and combinators). While, querySelector selects the first matching element with the CSS selector and returns only one element, the querySelectorAll selects all matching elements with the CSS selector and returns a static nodeList.
 
 ### 2. How do you create and insert a new element into the DOM?
 - Website name and Create a dashboard like figma 

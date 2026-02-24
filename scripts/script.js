@@ -229,6 +229,7 @@ mainContainer.addEventListener('click', function (event) {
 
 })
 
+
 // function for rendering interview tab
 function renderInterview(){
     filterSection.innerHTML = '';
@@ -266,7 +267,7 @@ function renderInterview(){
                 </div>
 
 
-                <div class="flex text-[14px] gap-1 text-[#64748bFF]">
+                <div class="flex flex-col md:flex-row md:gap-1 text-[14px] gap-1 text-[#64748bFF]">
                     <p class="location">${interview.location}</p>•
                     <p class="type">${interview.type}</p>•
                     <p class="salary">$130,000 - $175,000<p>
@@ -345,7 +346,7 @@ function renderRejected(){
                 </div>
 
 
-                <div class="flex text-[14px] gap-1 text-[#64748bFF]">
+                <div class="flex flex-col md:flex-row md:gap-1 text-[14px] gap-1 text-[#64748bFF]">
                     <p class="location">${rejected.location}</p>•
                     <p class="type">${rejected.type}</p>•
                     <p class="salary">$130,000 - $175,000<p>
@@ -384,6 +385,4 @@ function renderRejected(){
     }
     calculateCount();
 }
-
-
 
